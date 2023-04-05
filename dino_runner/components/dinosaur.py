@@ -1,5 +1,5 @@
 import pygame
-from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING
+from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DIED
 class Dinosaur:
 
     X_POS=80
@@ -56,6 +56,8 @@ class Dinosaur:
             self.step_index=0
 
     def draw(self,screen):
+        if self.dino_dead:
+            self.image=DIED
         screen.blit(self.image, self.dino_rect)
         
     def jump(self):
