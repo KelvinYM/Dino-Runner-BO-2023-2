@@ -1,5 +1,6 @@
 import pygame
 from dino_runner.utils.constants import RUNNING, JUMPING, DUCKING, DIED
+from dino_runner.utils.constants import SHIELD_TYPE,DEFAULT_TYPE
 class Dinosaur:
 
     X_POS=80
@@ -18,8 +19,8 @@ class Dinosaur:
         self.dino_jump=False
         self.jump_vel=self.JUMP_VEL
         self.dino_dead=False
-
-
+        self.time_up_power_up=False
+        self.shield=False
     def run(self):
         self.image=RUNNING[0] if self.step_index<5 else RUNNING[1]
         self.dino_rect=self.image.get_rect()
@@ -54,7 +55,10 @@ class Dinosaur:
 
         if self.step_index>=10:
             self.step_index=0
-
+        if self.shield:
+            time_to_show=round((self.time_up_power_up-pygame.time.get_ticks())/1000,2)
+            if time_to_show<0:
+                self.reset()
     def draw(self,screen):
         if self.dino_dead:
             self.image=DIED
@@ -69,4 +73,13 @@ class Dinosaur:
             self.dino_rect.y=self.Y_POS
             self.dino_jump=False
             self.jump_vel=self.JUMP_VEL
-        
+    def set_power_up(self,power_up):
+        if power_up.type==SHIELD_TYPE:
+            self.type=SHIELD_TYPE
+            self.shield=True
+            self.time_up_power_up=power_up.time_up
+    def reset(self):
+        self.type=DEFAULT_TYPE
+        self.shield=False
+        self.time_up_power_up=0
+    
